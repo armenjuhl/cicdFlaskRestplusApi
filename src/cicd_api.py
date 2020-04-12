@@ -21,7 +21,7 @@ stage = api.model('Stage', {
 })
 
 activity = api.model('Activity', {
-    'id': fields.Integer(readonly=True, description='The stage class object unique identifier'),
+    'id': fields.Integer(readonly=True, description='The activity class object unique identifier'),
     'name': fields.String(required=True, description='The name of the stage')
 })
 
@@ -96,7 +96,7 @@ class StageDAO(CiCdAbstractDAO):
 
     def create(self, project_pk, data):
         if projectDAO.get(project_pk):
-            new_stage = StageClass(project_pk=project_pk, name=data.get('name'))
+            new_stage = StageClass(name=data.get('name'), project_pk=project_pk)
             new_stage.id = self.counter = self.counter + 1
             new_stage.project_id = project_pk
             self.store.append(new_stage)
@@ -108,31 +108,13 @@ class ActivityDAO(CiCdAbstractDAO):
         super().__init__()
         self.counter = 0
 
-    def get(self, project_pk, stage_pk):
-        results = list()
-        for this_item in self.store:
-            if this_item['project_pk'] == project_pk and this_item['stage_pk'] == stage_pk:
-                results.append(this_item)
-        return this_item
-
-        api.abort(404, f"Instance {stage_pk} doesn't exist")
-
     def create(self, project_pk, stage_pk, data):
-        this_item = data
-        this_item['id'] = self.counter = self.counter + 1
-        this_item['project_pk'] = project_pk
-        this_item['stage_pk'] = stage_pk
-        self.store.append(this_item)
-        return this_item
-
-    def update(self, project_pk, stage_pk, data):
-        this_item = self.get(id)
-        this_item.update(data)
-        return this_item
-
-    def delete(self, project_pk, stage_pk):
-        this_item = self.get(id)
-        self.store.remove(this_item)
+        if projectDAO.get(project_pk):
+            new_stage = ActivityClass(project_pk=project_pk, stage_pk=stage_pk, name=data.get('name'))
+            new_stage.id = self.counter = self.counter + 1
+            new_stage.project_id = project_pk
+            self.store.append(new_stage)
+            return new_stage
 
 
 projectDAO = ProjectDAO()
@@ -150,10 +132,12 @@ stageDAO.create(3, {'name': 'project-3-staging'})
 stageDAO.create(4, {'name': 'project-4-production'})
 
 activityDAO = ActivityDAO()
-activityDAO.create(1, 1, {'name': 'push-to-remote'})
-activityDAO.create(1, 2, {'name': 'push-to-master'})
-activityDAO.create(2, 3, {'name': 'pull-request'})
-activityDAO.create(3, 4, {'name': 'merge-request'})
+activityDAO.create(1, 1, {'name': 'push-to-remote-project-1-stage-1'})
+activityDAO.create(1, 1, {'name': 'push-to-remote-project-1-stage-1'})
+activityDAO.create(1, 2, {'name': 'push-to-master-project-1-stage-2'})
+activityDAO.create(2, 3, {'name': 'pull-request-project-2-stage-3'})
+activityDAO.create(3, 4, {'name': 'merge-request-project-3-stage-4'})
+
 
 # Projects
 @ns.route('/projects')
@@ -170,7 +154,7 @@ class ProjectList(Resource):
     @ns.marshal_with(project, code=201)
     def post(self):
         '''Create a new project'''
-        return projectDAO.create(api.payload), 201
+        return projectDAO.create(data=api.payload), 201
 
 
 @ns.route('/projects/<int:project_pk>')
@@ -182,7 +166,7 @@ class Project(Resource):
     @ns.marshal_with(project)
     def get(self, project_pk):
         '''Fetch a given resource'''
-        return projectDAO.get(project_pk)
+        return projectDAO.get(obj_id=project_pk)
 
     @ns.doc('delete_project')
     @ns.response(204, 'Project deleted')
@@ -198,7 +182,7 @@ class Project(Resource):
     @ns.marshal_with(project)
     def put(self, project_pk):
         '''Update a project given its identifier'''
-        return projectDAO.update(project_pk, api.payload)
+        return projectDAO.update(obj_id=project_pk, data=api.payload)
 
 
 # Stages
@@ -223,7 +207,7 @@ class StageList(Resource):
     @ns.marshal_with(stage, code=201)
     def post(self, project_pk):
         '''Create a new stage'''
-        return stageDAO.create(project_pk, api.payload), 201
+        return stageDAO.create(project_pk=project_pk, data=api.payload), 201
 
 
 @ns.route('/projects/<int:project_pk>/stages/<int:stage_pk>')
@@ -234,11 +218,11 @@ class Stage(Resource):
     '''Show a single stage for given project unique identifier'''
     @ns.doc('get_stage')
     @ns.marshal_with(stage)
-    def get(self, stage_pk, project_pk):
+    def get(self, project_pk, stage_pk):
         '''Fetch a single stage for given stage unique identifier'''
-        for this_stage in stageDAO.store:
-            if this_stage.id == stage_pk and this_stage.project_id == project_pk:
-                return this_stage
+        this_stage = stageDAO.get(stage_pk)
+        if this_stage and this_stage.project_id == project_pk:
+            return this_stage
         api.abort(404, f"Stage {stage_pk} in project {project_pk} doesn't exist")
 
     @ns.doc('delete_stage')
@@ -247,7 +231,7 @@ class Stage(Resource):
         '''Delete a stage given its unique identifier'''
         for this_stage in stageDAO.store:
             if this_stage.id == stage_pk and this_stage.project_id == project_pk:
-                stageDAO.delete(stage_pk)
+                stageDAO.delete(obj_id=stage_pk)
                 return 204
         return 404
 
@@ -258,7 +242,7 @@ class Stage(Resource):
         '''Update a stage given its identifier'''
         for this_stage in stageDAO.store:
             if this_stage.id == stage_pk and this_stage.project_id == project_pk:
-                stageDAO.update(stage_pk, api.payload)
+                stageDAO.update(obj_id=stage_pk, data=api.payload)
                 return 204
         api.abort(404, f"Stage {stage_pk} in project {project_pk} doesn't exist")
 
@@ -271,59 +255,58 @@ class ActivityList(Resource):
     '''Shows a list of all activities for a given stage, and lets you POST to add new activities'''
     @ns.doc('list_activities')
     @ns.marshal_list_with(activity)
-    def get(self):
+    def get(self, project_pk, stage_pk):
         '''List all activities under given project unique identifier'''
         payload = list()
         for this_activity in activityDAO.store:
             if this_activity.project_id == project_pk and this_activity.stage_id == stage_pk:
                 payload.append(this_activity)
         return payload
-        return activityDAO.store
 
     @ns.doc('create_activity')
     @ns.expect(activity)
     @ns.marshal_with(stage, code=201)
     def post(self, project_pk, stage_pk):
         '''Create a new activity'''
-        payload = {'name': api.payload['name'], 'project_pk': project_pk, 'stage_pk': stage_pk}
-        return activityDAO.create(payload), 201
+        return activityDAO.create(project_pk=project_pk, stage_pk=stage_pk, data=api.payload), 201
 
 
 @ns.route('/projects/<int:project_pk>/stages/<int:stage_pk>/activities/<int:activity_pk>')
 @ns.response(404, 'Activity not found')
+@ns.param('activity_pk', 'The unique activity identifier')
 @ns.param('stage_pk', 'The unique stage identifier')
 @ns.param('project_pk', 'The unique project identifier')
-@ns.param('activity_pk', 'The unique activity identifier')
 class Activity(Resource):
-    '''Show a single activity for given project unique identifier'''
+    '''Show a single activity for given project and stage unique identifiers'''
     @ns.doc('get_activity')
     @ns.marshal_with(activity)
     def get(self, stage_pk, project_pk, activity_pk):
-        '''Fetch a single acitivty for given activity unique identifier'''
-        for this_activity in activityDAO.store:
-            if this_activity['id'] == activity_pk and stage_pk and this_activity['project_id'] == project_pk and this_activity['id'] \
-                    == activity_pk:
-                return this_activity
+        '''Fetch a single acitivty for given project, stage and activity unique identifier'''
+        this_activity = activityDAO.get(activity_pk)
+        if this_activity and this_activity.stage_id == stage_pk and this_activity.project_id == project_pk \
+                and this_activity.id == activity_pk:
+            return this_activity
         return 404
 
     @ns.doc('delete_stage')
     @ns.response(204, 'Stage deleted')
-    def delete(self, stage_pk, project_pk):
+    def delete(self, stage_pk, project_pk, activity_pk):
         '''Delete a stage given its unique identifier'''
-        for this_stage in stageDAO.store:
-            if this_stage['id'] == stage_pk and this_stage['project_id'] == project_pk:
-                stageDAO.delete(stage_pk)
+        for this_activity in activityDAO.store:
+            if activityDAO.get(activity_pk) and this_activity.project_id == project_pk \
+                    and this_activity.stage_id == stage_pk:
+                activityDAO.delete(activity_pk)
                 return 204
         return 404
 
     @ns.expect(stage)
     @ns.response(204, 'Stage updated')
     @ns.marshal_with(stage)
-    def put(self, stage_pk, project_pk):
+    def put(self, project_pk, stage_pk, activity_pk):
         '''Update a stage given its identifier'''
-        for this_stage in stageDAO.store:
-            if this_stage['id'] == stage_pk and this_stage['project_id'] == project_pk:
-                stageDAO.update(this_stage, api.payload)
+        for this_stage in activityDAO.store:
+            if this_stage.project_id == project_pk and this_stage.id == stage_pk and this_stage.id == activity_pk:
+                activityDAO.update(obj_id=activity_pk, data=api.payload)
                 return 204
         return 404
 
