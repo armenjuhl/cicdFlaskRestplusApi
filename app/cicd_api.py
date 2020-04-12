@@ -1,14 +1,7 @@
-from flask import Flask, request
-from flask_restplus import Api, Resource, fields
-from werkzeug.contrib.fixers import ProxyFix
+from flask_restplus import Resource, fields
+from app.app import api
+from app.namespace import ns
 
-app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app)
-api = Api(app, version='1.0', title='CiCd API',
-          description='An internal CI/CD API',
-          )
-
-ns = api.namespace('api', description='CiCd operations')
 
 project = api.model('Project', {
     'id': fields.Integer(readonly=True, description='The project unique identifier'),
@@ -309,8 +302,3 @@ class Activity(Resource):
                 activityDAO.update(obj_id=activity_pk, data=api.payload)
                 return 204
         return 404
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
