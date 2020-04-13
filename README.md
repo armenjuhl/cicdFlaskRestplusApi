@@ -25,7 +25,7 @@ The endpoints that need to be implemented are as follows:
   <li>pip install -r requirements.txt</li>
   <li>python3 src/cicd_api.py</li>
   <li>Open <a href="http://127.0.0.1:5000/">http://127.0.0.1:5000/</a> on your browser</li>
-  <li>Interact with endpoints under the api toggle item with the Swagger UI</li>
+  <li>Interact with endpoints under the <a href="#">api</a> toggle item with the Swagger UI</li>
 </ol>
 
 <h1>Notes</h1>
