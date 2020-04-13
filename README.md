@@ -44,7 +44,7 @@ Todos:
 <img src="https://raw.githubusercontent.com/armenjuhl/cicdFlaskRestplusApi/master/screencapture-127-0-0-1-5000-2020-04-13-08_21_53.jpg"/>
 
 <h1>Dependencies</h1>
-<p> aniso8601==8.0.0
+aniso8601==8.0.0
 attrs==19.3.0
 click==7.1.1
 Flask==1.1.2
@@ -58,4 +58,4 @@ pyrsistent==0.16.0
 pytz==2019.3
 six==1.14.0
 SQLAlchemy==1.3.16
-Werkzeug==0.16.1 </p>
+Werkzeug==0.16.1
