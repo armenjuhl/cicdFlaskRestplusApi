@@ -44,18 +44,20 @@ Todos:
 <img src="https://raw.githubusercontent.com/armenjuhl/cicdFlaskRestplusApi/master/screencapture-127-0-0-1-5000-2020-04-13-08_21_53.jpg"/>
 
 <h1>Dependencies</h1>
-aniso8601==8.0.0
-attrs==19.3.0
-click==7.1.1
-Flask==1.1.2
-flask-restplus==0.13.0
-Flask-SQLAlchemy==2.1
-itsdangerous==1.1.0
-Jinja2==2.11.1
-jsonschema==3.2.0
-MarkupSafe==1.1.1
-pyrsistent==0.16.0
-pytz==2019.3
-six==1.14.0
-SQLAlchemy==1.3.16
-Werkzeug==0.16.1
+<p>
+aniso8601==8.0.0<br/>
+attrs==19.3.0<br/>
+click==7.1.1<br/>
+Flask==1.1.2<br/>
+flask-restplus==0.13.0<br/>
+Flask-SQLAlchemy==2.1<br/>
+itsdangerous==1.1.0<br/>
+Jinja2==2.11.1<br/>
+jsonschema==3.2.0<br/>
+MarkupSafe==1.1.1<br/>
+pyrsistent==0.16.0<br/>
+pytz==2019.3<br/>
+six==1.14.0<br/>
+SQLAlchemy==1.3.16<br/>
+Werkzeug==0.16.1<br/>
+</p>
