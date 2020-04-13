@@ -30,8 +30,8 @@ The endpoints that need to be implemented are as follows:
 
 <h1>Notes</h1>
 Being no other guidelines were given, I created a single file REST Api application using the Flask RESTPlus framework. I utilized Flask RESTPlus because it of its implementation of Swagger which gives the API an easy to interact with UI. The application currently uses in-memory persistence rather than a database. I utilized the Data Access Object Design Pattern (DAO). This decouple's CRUD operations and the database layer which enables the project to be easily refactor to implement a database and data models in the future. 
-<br/>
-<strong>To create a production quality API with this project a minimum of the following tasks need to be done.</strong>
+<br/><br/>
+<strong>To create a production quality API with this project a minimum of the following tasks need to be completed.</strong>
 <br/>
 <h4>Todos:</h4>
 <ul>
