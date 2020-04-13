@@ -38,7 +38,7 @@ Todos:
   <li>Incorporate database (MySql, Postgre SQL, MariaDB, MongoDB, etc)</li>
   <li>Refactor DAO implementation to use persistence layer in CRUD</li>
   <li>Optional: Incorporate Marshmallow or similar marshalling framework for increased input validation</li>
-
+</ul>
 
 <h1>Dependencies</h1>
 <p> aniso8601==8.0.0
