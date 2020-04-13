@@ -1,5 +1,5 @@
 # CiCi Api built using the Flask RESTPlus framework
-<h1>Instructions</h1>
+<h1>Project Requirements</h1>
 
 Use your choice of python web frameworks to create an nested web api that models the following objects:
 
