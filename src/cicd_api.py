@@ -298,13 +298,13 @@ class Activity(Resource):
                 return 204
         return 404
 
-    @ns.expect(stage)
+    @ns.expect(activity)
     @ns.response(204, 'Stage updated')
-    @ns.marshal_with(stage)
+    @ns.marshal_with(activity)
     def put(self, project_pk, stage_pk, activity_pk):
-        '''Update a stage given its identifier'''
-        for this_stage in activityDAO.store:
-            if this_stage.project_id == project_pk and this_stage.id == stage_pk and this_stage.id == activity_pk:
+        '''Update an activity given its unique identifier'''
+        for this_activity in activityDAO.store:
+            if this_activity.project_id == project_pk and this_activity.id == stage_pk and this_activity.id == activity_pk:
                 activityDAO.update(obj_id=activity_pk, data=api.payload)
                 return 204
         return 404
