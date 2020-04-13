@@ -41,7 +41,7 @@ Todos:
 </ul>
 
 <h1>Screenshot</h1>
-<img src="https://raw.githubusercontent.com/armenjuhl/cicdFlaskRestplusApi/92d502f70f590aca1d859d1c002764adb1352859/screencapture-127-0-0-1-5000-2020-04-13-08_21_53.pdf"/>
+<img src="/cicdFlaskRestplusApi/92d502f70f590aca1d859d1c002764adb1352859/screencapture-127-0-0-1-5000-2020-04-13-08_21_53.pdf"/>
 
 <h1>Dependencies</h1>
 <p> aniso8601==8.0.0
