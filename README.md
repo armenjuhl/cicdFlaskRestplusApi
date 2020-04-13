@@ -42,7 +42,7 @@ Todos:
 </ul>
 
 <h1>Screenshot</h1>
-<img src="https://raw.githubusercontent.com/armenjuhl/cicdFlaskRestplusApi/master/screencapture-127-0-0-1-5000-2020-04-13-08_21_53.jpg"/>
+<img src="https://github.com/armenjuhl/cicdFlaskRestplusApi/blob/master/screencapture-127-0-0-1-5000-2020-04-13-08_21_53.png?raw=true"/>
 
 <h1>Dependencies</h1>
 <p>
