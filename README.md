@@ -29,7 +29,7 @@ The endpoints that need to be implemented are as follows:
 </ol>
 
 <h1>Notes</h1>
-Being no other guidelines were given, I created a single file REST Api application using the Flask RESTPlus framework. I utilized Flask RESTPlus because it of its implementation of Swagger which gives the API an easy to interact with UI. The application currently uses in-memory persistence rather than a database. I utilized the Data Access Object Design Pattern (DAO). This pattern allowed for a progressive application development experience enabling me to point to a database and data models as the data source independently of the CRUD operation functionality. 
+Being no other guidelines were given, I created a single file REST Api application using the Flask RESTPlus framework. I utilized Flask RESTPlus because it of its implementation of Swagger which gives the API an easy to interact with UI. The application currently uses in-memory persistence rather than a database. I utilized the Data Access Object Design Pattern (DAO). This decouple's CRUD operations and the database layer which enables the project to be easily refactor to implement a database and data models in the future. 
 
 To create a production quality API with this project a minimum of the following tasks need to be done.
 Todos:
@@ -37,7 +37,7 @@ Todos:
   <li>Refactor app file structure according to Flask RESTPlus and/ or company conventions</li>
   <li>Incorporate SQLAlchemy models</li>
   <li>Incorporate database (MySql, Postgre SQL, MariaDB, MongoDB, etc)</li>
-  <li>Refactor DAO implementation to use persistence layer in CRUD</li>
+  <li>Refactor DAO Classes data source to implement persistence layer in CRUD operations</li>
   <li>Optional: Incorporate Marshmallow or similar marshalling framework for increased input validation</li>
 </ul>
 
